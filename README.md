@@ -96,13 +96,13 @@ It prints out `undefined`. What the heck?!
 You see, in JavaScript, hoisting only applies to variable _declarations_; not variable _assignments_. As a quick refresher on that terminology:
 ```js
 // Declaration:
-var hello;
+let hello;
 
 // Assignment:
 hello = 'World!';
 
 // Declaration and assignment on the same line:
-var goodnight = 'Moon';
+let goodnight = 'Moon';
 ```
 
 During the compilation phase, the JavaScript engine initializes the variable `hello`, storing it in memory. At this point, however, **no value is assigned to the variable**. As far as the JavaScript engine is concerned, the variable `hello` exists, but it contains `undefined`.
