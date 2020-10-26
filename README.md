@@ -1,6 +1,7 @@
 # Hoisting
 
 ## Overview
+
 In this lesson, we'll introduce the concept of hoisting, which deals with how function and variable declarations seem to get 'hoisted' to the top of the current scope. We'll also explain how the problems it causes are easily avoided by following simple rules for where and how declarations should happen within your code.
 
 If you read any pre-ES2015 JavaScript materials, hoisting is sure to come up as a topic of concern. However, follow these two simple rules, and you'll never have to worry about it:
@@ -8,18 +9,17 @@ If you read any pre-ES2015 JavaScript materials, hoisting is sure to come up as 
 - **Only use `const` and `let`. Never use `var`.**
 
 ## Objectives
+
 1. Detail how function and variable declarations are 'hoisted'.
 2. Explain why it's best to declare functions and variables (at least those declared with `var`) at the top of the scope.
 3. Understand, as always, that ***it's better to use `const` and `let`*** than `var`.
 
 ## Function hoisting
-<picture>
-  <source srcset="https://curriculum-content.s3.amazonaws.com/web-development/js/principles/hoisting-readme/lets_get_hoisting.webp" type="image/webp">
-  <source srcset="https://curriculum-content.s3.amazonaws.com/web-development/js/principles/hoisting-readme/lets_get_hoisting.gif" type="image/gif">
-  <img src="https://curriculum-content.s3.amazonaws.com/web-development/js/principles/hoisting-readme/lets_get_hoisting.gif" alt="Let's get hoisting!">
-</picture>
+
+![Let's get hoisting!](https://curriculum-content.s3.amazonaws.com/web-development/js/principles/hoisting-readme/lets_get_hoisting.gif)
 
 Because the JavaScript engine reads a JavaScript file from top-to-bottom, it would make sense if we had to define a function before we invoked it:
+
 ```js
 function myFunc () {
   return 'Hello, world!';
@@ -30,6 +30,7 @@ myFunc();
 ```
 
 However, we can invert those two steps and everything works fine:
+
 ```js
 myFunc();
 
@@ -40,12 +41,14 @@ function myFunc () {
 ```
 
 ***NOTE***: To follow along in your browser's JavaScript console, make sure you type all of the code into the prompt before you press **Enter**. To insert a new line without executing what you've typed, hold **Shift** and press **Enter**. If you type `myFunc();` and then hit **Enter**, the browser will run your code, and you'll see an `Uncaught ReferenceError` telling you that `myFunc is not defined`. If it helps, you can copy and paste the above code all at once, or you can type it on a single line:
+
 ```js
 myFunc(); function myFunc () { return 'Hello, world!'; }
 // => "Hello, world!"
 ```
 
 This reads as though we're invoking the function prior to declaring it, but we're forgetting about the two-phase nature of the JavaScript engine. During the compilation phase, the engine skips right over the invocation and stores the declared function in memory:
+
 ```js
 // The engine ignores all function invocations during the compilation phase.
 myFunc();
@@ -56,6 +59,7 @@ function myFunc () {
 ```
 
 By the time the JavaScript engine reaches the execution phase, `myFunc()` has already been created in memory. The engine starts over at the top of the code and begins executing it line-by-line:
+
 ```js
 // During the execution phase, the engine invokes myFunc(), which was already initialized during the compilation phase.
 myFunc();
@@ -74,6 +78,7 @@ The best way to avoid any confusion brought on by function hoisting is to simply
 We're going to look at some of the hoisting issues caused by `var` because you will encounter this weirdness in legacy code. However, the fix is extremely easy: use `const` and `let` and you'll have no variable hoisting issues.
 
 Look at the following code:
+
 ```js
 function myFunc () {
   console.log(hello);
@@ -94,6 +99,7 @@ myFunc();
 It prints out `undefined`. What the heck?!
 
 You see, in JavaScript, hoisting only applies to variable _declarations_; not variable _assignments_. As a quick refresher on that terminology:
+
 ```js
 // Declaration:
 let hello;
@@ -108,6 +114,7 @@ let goodnight = 'Moon';
 During the compilation phase, the JavaScript engine initializes the variable `hello`, storing it in memory. At this point, however, **no value is assigned to the variable**. As far as the JavaScript engine is concerned, the variable `hello` exists, but it contains `undefined`.
 
 The variable will contain `undefined` until it's assigned a different value during the execution phase. Because of this odd behavior, you'll often see variable hoisting explained by taking some sample code...
+
 ```js
 function myFunc () {
   console.log(hello);
@@ -117,6 +124,7 @@ function myFunc () {
 ```
 
 and rearranging it to better indicate the order of events:
+
 ```js
 function myFunc () {
   var hello;
@@ -128,6 +136,7 @@ function myFunc () {
 ```
 
 When rearranged, it's clear that the variable is initialized as `undefined`, that it still contains `undefined` when it's logged out to the console, and that only after the logging event is it assigned the value of `'World!'`. However, armed with knowledge of what's going on under the hood (the distinct compilation and execution phases), we don't need any of that code transposition nonsense. When we invoke the following function, five things happen:
+
 ```js
 function myFunc () {
   console.log(hello);
@@ -149,15 +158,13 @@ myFunc();
 5. At the final line, we `return` the value of `hello`, which by now has been assigned and evaluates to `'World!'`.
 
 ### Avoiding the confusion of `var` hoisting
-<picture>
-  <source srcset="https://curriculum-content.s3.amazonaws.com/web-development/js/principles/hoisting-readme/not_about_to_hoist.webp" type="image/webp">
-  <source srcset="https://curriculum-content.s3.amazonaws.com/web-development/js/principles/hoisting-readme/not_about_to_hoist.gif" type="image/gif">
-  <img src="https://curriculum-content.s3.amazonaws.com/web-development/js/principles/hoisting-readme/not_about_to_hoist.gif" alt="And I'm not about to hoist myself out of it.">
-</picture>
+
+![And I'm not about to hoist myself out of it.](https://curriculum-content.s3.amazonaws.com/web-development/js/principles/hoisting-readme/not_about_to_hoist.gif)
 
 There are two ways to keep the JavaScript engine from 'hoisting' your variables:
 
 1. If, for whatever reason, your current project requires that you use `var`, follow our rule for function declarations and declare everything at the **top** of its scope. E.g., if you need to declare a variable within a function, declare it at the **top** of that function:
+
     ```js
     // BAD
     function myBadFunc () {
@@ -175,6 +182,7 @@ There are two ways to keep the JavaScript engine from 'hoisting' your variables:
     ```
 
 2. For the love of all things good in this world, ***don't use `var`***. Variables declared with `const` and `let` do technically get 'hoisted', but the JavaScript engine doesn't allow them to be referenced before they've been initialized. Bad:
+
     ```js
     myVar;
 
