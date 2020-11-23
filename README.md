@@ -191,6 +191,7 @@ There are two ways to keep the JavaScript engine from 'hoisting' your variables:
     ```
 
     Good:
+    
     ```js
     const myOtherVar = "Gotta assign a value for our beloved 'const'.";
 
